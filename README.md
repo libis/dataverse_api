@@ -30,6 +30,8 @@ In order to configure the API calls, you need to define at least two environment
  - API_TOKEN: a token to identify and authorize the user. Note that for some API calls a superuser token may be required.
  - RESTCLIENT_LOG: if defined, will log the REST API calls to the given file. Set to 'stdout' if you want to log to screen.
 
+You can set these environment variables in a .env file if you wish as the dotenv gem is used here. The file .env.template is provided as a starting point.
+
 ## Dataverse::Dataverse
 
 The class that captures the api dealing with dataverses.
