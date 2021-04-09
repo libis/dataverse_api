@@ -1,8 +1,6 @@
-# Dataverse
+# Dataverse API gem
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dataverse`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This gem wraps the Dataverse API in a set of Ruby classes. You can use the classes to perform the API calls and process the result on the Ruby objects. It builds upon the rest-client gem to perform the low-level REST API calls. For more information about Dataverse and the API, see https://dataverse.org/ and https://guides.dataverse.org/en/latest/api/index.html
 
 ## Installation
 
@@ -22,8 +20,6 @@ Or install it yourself as:
 
 ## Usage
 
-This gem wraps the Dataverse.org API in a set of Ruby classes. You can use the classes to perform the API calls and process the result on the Ruby objects. It builds upon the rest-client gem to perform the low-level REST API calls.
-
 In order to configure the API calls, you need to define at least two environment variables:
 
  - API_URL: the full url of the Dataverse repository you want to access. This URL should be give up to and including the '/api' path. Optionally, a version portion can be added to the path.
@@ -34,27 +30,27 @@ You can set these environment variables in a .env file if you wish as the dotenv
 
 ## Dataverse::Dataverse
 
-The class that captures the api dealing with dataverses.
+The class that captures the api dealing with Dataverse collections.
 
-### Accessing an existing dataverse
+### Accessing an existing Dataverse collection
 
-You can create a new instance by supplying the id or alias of an existing dataverse to the constructor:
+You can create a new instance by supplying the id or alias of an existing Dataverse collection to the constructor:
 
 ```ruby
 Dataverse::Dataverse.id('my_dataverse')
 # => #<Dataverse::Dataverse:0x0...>
 ```
 
-You can pass the value ':root' or use the #root class method if you want to access the root dataverse.
+You can pass the value ':root' or use the #root class method if you want to access the Dataverse root collection.
 
 ```ruby
 Dataverse::Dataverse.id(':root') == Dataverse::Dataverse.root
 # => true
 ```
 
-### Creating a new dataverse
+### Creating a new Dataverse collection
 
-To create a new dataverse, you should first open an instance for the parent dataverse, then call the #create method on it, supplying either a Hash, a file name or a JSON string.
+To create a new Dataverse collection, you should first open an instance for the parent Dataverse collection, then call the #create method on it, supplying either a Hash, a file name or a JSON string.
 
 ```ruby
 parent_dv = Dataverse::Dataverse.id('parent_dv')
@@ -79,14 +75,14 @@ Dataverse::Dataverse::TYPES
 #     "UNCATEGORIZED"]
 ```
 
-All the metadata of an existing dataverse can be retrieved as a Hash with the #rdm_data method:
+All the metadata of an existing Dataverse collection can be retrieved as a Hash with the #rdm_data method:
 
 ```ruby
 parent_dv.rdm_data
 # => {"id"=>5, "alias"=>"parent_dv", ...}
 ```
 
-The resulting Hash can be saved to a file and used to create a new dataverse:
+The resulting Hash can be saved to a file and used to create a new Dataverse collection:
 
 ```ruby
 data = parent_dv.rdm_data.dup
@@ -97,14 +93,14 @@ new_dv = parent_dv.create(filename)
 # => #<Dataverse::Dataverse:0x0...>
 ```
 
-### Deleting a dataverse
+### Deleting a Dataverse collection
 
 ```ruby
 new_dv.delete
 # => {"message" => "Dataverse 15 deleted"}
 ```
 
-### Publishing a dataverse
+### Publishing a Dataverse collection
 
 ```ruby
 new_dv.publish
@@ -114,11 +110,11 @@ new_dv.publish
 # => Dataverse::Error: Dataverse new_dv has already been published
 ```
 
-Note that if a dataverse was already published, the call will raise a Dataverse::Error exception.
+Note that if a Dataverse collection was already published, the call will raise a Dataverse::Error exception.
 
-### Access dataverse properties
+### Access properties of a Dataverse collection
 
-The Dataverse properties can be accessed similar to a Hash:
+The properties of a Dataverse collection can be accessed similar to a Hash:
 
 ```ruby
 parent_dv.keys
@@ -161,7 +157,7 @@ data
 # => {"alias" => "new_dv", ...}
 ```
 
-The id or alias that was used to instantiate the Dataverse:
+The id or alias that was used to instantiate the Dataverse collection:
 
 ```ruby
 parent_dv.id
@@ -181,7 +177,7 @@ parent_dv['alias']
 # => "parent_dv"
 ```
 
-### Report the data file size of a Dataverse (in bytes)
+### Report the data file size of a Dataverse collection (in bytes)
 
 ```ruby
 parent_dv.size
@@ -190,14 +186,14 @@ parent_dv.size
 
 ### Browsing
 
-Get an array of child dataverses and datasets:
+Get an array of child Dataverse collections and datasets:
 
 ```ruby
 parent_dv.children
 # => [#<Dataverse::Dataverse:0x0...>, #<Dataverse::Dataset:0x0...>]
 ```
 
-Iterate over all child dataverses recursively:
+Iterate over all child Dataverse collections recursively:
 
 ```ruby
 parent_dv.each_dataverse do |dv|
@@ -225,7 +221,7 @@ The class that encapsulates the dataset related API.
 
 ### Accessing an existing dataset
 
-A new Dataset instance can be obtained from the parent Dataverse's #children call or can be directly instantiated if you know the dataset's id or persistent identifier:
+A new Dataset instance can be obtained from the parent Dataverse collection's #children call or can be directly instantiated if you know the dataset's id or persistent identifier:
 
 ```ruby
 ds = parent_dv.children[1]
@@ -240,7 +236,7 @@ Dataverse::Dataset.pid('doi:10.5072/FK2/J8SJZB')
 
 ### Creating a new dataset
 
-A new dataset can only be created on an existing dataverse. You should supply either a Hash, a file name or a JSON string to the #create_dataset method.
+A new dataset can only be created on an existing Dataverse collection. You should supply either a Hash, a file name or a JSON string to the #create_dataset method.
 
 ```ruby
 ds = parent_dv.create_dataset(
@@ -261,7 +257,7 @@ data = ds.raw_data
 # => {"datasetVersion" => {"metadataBlocks" => {"citation" => {...}}}}
 ```
 
-The resulting Hash can be used to create a new dataverse, either directly or by saving it to a file.
+The resulting Hash can be used to create a new dataset, either directly or by saving it to a file.
 
 ```ruby
 data = ds.raw_data
@@ -276,7 +272,7 @@ new_ds = parent_dv.create_dataset(filename)
 
 ### Importing a dataset
 
-The #import_dataset method on a dataverse allows to import an existing dataset. The dataset should be registred and its persisten identifier should be supplied in the pid argument. The data argument is similar to the #create_dataset method.
+The #import_dataset method on a Dataverse collection allows to import an existing dataset. The dataset should be registred and its persisten identifier should be supplied in the pid argument. The data argument is similar to the #create_dataset method.
 
 ```ruby
 data = 'dataset.json'
@@ -417,7 +413,7 @@ data = ds.export_metadata('schema.org')
 # => {"@context"=>"http://schema.org", "@type"=>"Dataset", ...}
 ```
 
-The resulting Hash can be used to create a new dataverse, either directly or by saving it to a file.
+The resulting Hash can be used to create a new dataset, either directly or by saving it to a file.
 
 ```ruby
 data = ds.raw_data
@@ -597,4 +593,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Dataverse project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/libis/dataverse_api/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Dataverse API project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/libis/dataverse_api/blob/master/CODE_OF_CONDUCT.md).
