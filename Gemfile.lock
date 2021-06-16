@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dataverse (0.1.1)
+    dataverse (0.1.2)
       rest-client (~> 2.0)
 
 GEM
