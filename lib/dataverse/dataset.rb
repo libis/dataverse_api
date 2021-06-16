@@ -61,7 +61,7 @@ module Dataverse
     end
 
     def size
-      data = call("storagesize", params: {includCached: 'true'})
+      data = call("storagesize", params: {includeCached: 'true'})
       data['message'][/[,\d]+/].delete(',').to_i
     end
 
