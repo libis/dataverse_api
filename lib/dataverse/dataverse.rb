@@ -127,7 +127,7 @@ module Dataverse
     end
 
     def export_metadata(md_type)
-      format = case md_type.to_s
+      case md_type.to_s
       when 'rdm'
         return rdm_data
       else

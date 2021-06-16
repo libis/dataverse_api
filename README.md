@@ -12,13 +12,23 @@ gem 'dataverse'
 
 And then execute:
 
-    $ bundle install
+```
+$ bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install dataverse
+```
+$ gem install dataverse
+```
 
 ## Usage
+
+First load the library with
+
+```ruby
+require 'dataverse'
+```
 
 In order to configure the API calls, you need to define at least two environment variables:
 
@@ -26,7 +36,7 @@ In order to configure the API calls, you need to define at least two environment
  - API_TOKEN: a token to identify and authorize the user. Note that for some API calls a superuser token may be required.
  - RESTCLIENT_LOG: if defined, will log the REST API calls to the given file. Set to 'stdout' if you want to log to screen.
 
-You can set these environment variables in a .env file if you wish as the dotenv gem is used here. The file .env.template is provided as a starting point.
+You can set these environment variables in a .env file and use the dotenv gem to load the variables. The file .env.template is provided as a starting point for you.
 
 ## Dataverse::Dataverse
 
@@ -207,8 +217,8 @@ end
 Iterate over all child datasets recursively:
 
 ```ruby
-parent_dv.each_dataverse do |dv|
-    puts dv.size
+parent_dv.each_dataset do |ds|
+    puts ds.size
 end
 # => 123456
 # => 456123

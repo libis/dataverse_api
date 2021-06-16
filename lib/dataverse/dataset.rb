@@ -25,7 +25,7 @@ module Dataverse
     end
 
     def delete
-      url = raise Error.new 'Can only delete draft version' unless draft_version
+      raise Error.new 'Can only delete draft version' unless draft_version
       versions
       result = call('versions/:draft', method: :delete)
       @version_data.delete(:draft)
@@ -255,7 +255,7 @@ module Dataverse
     end
 
     def version_data(version)
-      data = @version_data[resolve_version(version)].transform_keys {|k| k == 'id' ? 'versionId' : k}
+      @version_data[resolve_version(version)].transform_keys { |k| k == 'id' ? 'versionId' : k }
     end
 
     private
