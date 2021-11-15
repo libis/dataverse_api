@@ -140,6 +140,13 @@ module Dataverse
         .merge(version_data(version))
         .merge('metadata' => metadata(version: version))
         .merge('files' => files(version: version))
+        .tap do |h|
+          h['license'] = {
+            'label' => license_name,
+            'uri' => license_url,
+            'iconUrl' => license_icon
+          }
+        end
     end
 
     def raw_data(version: :latest, with_files: false)
@@ -186,6 +193,18 @@ module Dataverse
         f.close
         size
       end
+    end
+
+    def license_url
+      fetch('termsOfUse')[/(?<=href=")[^"]*(?=")/]
+    end
+
+    def license_name
+      fetch('termsOfUse')[/[^>]*(?=<\/a>.$)/]
+    end
+
+    def license_icon
+      fetch('termsOfUse')[/(?<=src=")[^"]*(?=")/]
     end
 
     protected
