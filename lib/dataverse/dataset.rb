@@ -196,15 +196,15 @@ module Dataverse
     end
 
     def license_url
-      fetch('termsOfUse')[/(?<=href=")[^"]*(?=")/]
+      fetch('termsOfUse')[/(?<=href=")[^"]*(?=")/] rescue nil
     end
 
     def license_name
-      fetch('termsOfUse')[/[^>]*(?=<\/a>.$)/]
+      fetch('termsOfUse')[/[^>]*(?=<\/a>.$)/] rescue nil
     end
 
     def license_icon
-      fetch('termsOfUse')[/(?<=src=")[^"]*(?=")/]
+      fetch('termsOfUse')[/(?<=src=")[^"]*(?=")/] rescue nil
     end
 
     protected
