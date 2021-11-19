@@ -142,9 +142,9 @@ module Dataverse
         .merge('files' => files(version: version))
         .tap do |h|
           h['license'] = {
-            'label' => license_name,
-            'uri' => license_url,
-            'iconUrl' => license_icon
+            'label' => license_name(h),
+            'uri' => license_url(h),
+            'iconUrl' => license_icon(h)
           }
         end
     end
@@ -193,18 +193,6 @@ module Dataverse
         f.close
         size
       end
-    end
-
-    def license_url
-      fetch('termsOfUse')[/(?<=href=")[^"]*(?=")/] rescue nil
-    end
-
-    def license_name
-      fetch('termsOfUse')[/[^>]*(?=<\/a>.$)/] rescue nil
-    end
-
-    def license_icon
-      fetch('termsOfUse')[/(?<=src=")[^"]*(?=")/] rescue nil
     end
 
     protected
@@ -278,6 +266,18 @@ module Dataverse
     end
 
     private
+
+    def license_url(h)
+      h.fetch('termsOfUse')[/(?<=href=")[^"]*(?=")/] rescue nil
+    end
+
+    def license_name(h)
+      h.fetch('termsOfUse')[/[^>]*(?=<\/a>.$)/] rescue nil
+    end
+
+    def license_icon(h)
+      h.fetch('termsOfUse')[/(?<=src=")[^"]*(?=")/] rescue nil
+    end
 
     def process_data(data)
       return {} if data.nil? || data.empty?
