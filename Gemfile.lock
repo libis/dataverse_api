@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dataverse (0.1.5)
+    dataverse (0.1.6)
       rest-client (~> 2.0)
 
 GEM
@@ -14,12 +14,12 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
     http-accept (1.7.0)
-    http-cookie (1.0.4)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     method_source (1.0.0)
-    mime-types (3.4.1)
+    mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.1115)
+    mime-types-data (3.2021.0225)
     netrc (0.11.0)
     pry (0.14.0)
       coderay (~> 1.1)
@@ -45,7 +45,7 @@ GEM
     rspec-support (3.10.2)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8)
+    unf_ext (0.0.7.7)
 
 PLATFORMS
   ruby

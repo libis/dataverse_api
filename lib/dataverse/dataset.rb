@@ -142,6 +142,7 @@ module Dataverse
         .merge('files' => files(version: version))
         .tap do |h|
           h['license'] = {
+            'name' => license_spdx(h),
             'label' => license_name(h),
             'uri' => license_url(h),
             'iconUrl' => license_icon(h)
@@ -277,6 +278,10 @@ module Dataverse
 
     def license_icon(h)
       h.fetch('termsOfUse')[/(?<=src=")[^"]*(?=")/] rescue nil
+    end
+
+    def license_spdx(h)
+      h.fetch('termsOfUse')[/(?<=data-spdx=")[^"]*(?=")/] rescue nil
     end
 
     def process_data(data)
