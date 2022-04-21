@@ -141,7 +141,7 @@ module Dataverse
         .merge('metadata' => metadata(version: version))
         .merge('files' => files(version: version))
         .tap do |h|
-          h['license'] = {
+          h['license'] ||= {
             'name' => license_spdx(h),
             'label' => license_name(h),
             'uri' => license_url(h),
