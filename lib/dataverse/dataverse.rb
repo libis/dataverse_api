@@ -83,7 +83,8 @@ module Dataverse
           when 'dataverse'
             result << Dataverse.id(x['id'])
           when 'dataset'
-            result << Dataset.id(x['id'])
+            ds = Dataset.id(x['id'])
+            result << ds if ds.version
           else
             raise Error.new("Unsupported type: #{x['type']} (#{x['name']})")
           end

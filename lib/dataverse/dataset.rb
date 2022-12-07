@@ -286,12 +286,14 @@ module Dataverse
 
     def process_data(data)
       return {} if data.nil? || data.empty?
+      return {} unless data.has_key?('latestVersion')
       version_data = data.delete('latestVersion')
       process_version_data(version_data)
       data
     end
 
     def process_version_data(data)
+      return nil unless data
       metadata = pack_metadata(data.delete('metadataBlocks'))
       files = pack_files(data.delete('files'))
       version = get_version_number(data)
@@ -318,7 +320,7 @@ module Dataverse
 
     def pack_metadata(metadata)
       data = {}
-      metadata.each_value do |block|
+      (metadata || {}).each_value do |block|
         block['fields'].each do |field|
           data[field['typeName']] = field_to_value(field)
         end
