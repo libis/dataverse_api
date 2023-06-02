@@ -79,14 +79,18 @@ module Dataverse
         result = []
         data = call("contents")
         data.each do |x|
-          case x['type']
-          when 'dataverse'
-            result << Dataverse.id(x['id'])
-          when 'dataset'
-            ds = Dataset.id(x['id'])
-            result << ds if ds.version
-          else
-            raise Error.new("Unsupported type: #{x['type']} (#{x['name']})")
+          begin
+            case x['type']
+            when 'dataverse'
+              result << Dataverse.id(x['id'])
+            when 'dataset'
+              ds = Dataset.id(x['id'])
+              result << ds if ds.version
+            else
+              raise Error.new("Unsupported type: #{x['type']} (#{x['name']})")
+            end
+          rescue => e
+            puts "ERROR: Skipped creating #{x['type']} object '#{x['id']}' : '#{e.message}'."
           end
         end
         result
