@@ -118,8 +118,8 @@ module Dataverse
   end
 end
 
-# if log = ENV['RESTCLIENT_LOG']
-#   RestClient.log = STDOUT if log.upcase == 'STDOUT'
-#   RestClient.log = STDERR if log.upcase == 'STDERR'
-#   RestClient.log = log
-# end
+if log = ENV['RESTCLIENT_LOG']
+  RestClient.log = STDOUT if log.upcase == 'STDOUT'
+  RestClient.log = STDERR if log.upcase == 'STDERR'
+  RestClient.log = log
+end
