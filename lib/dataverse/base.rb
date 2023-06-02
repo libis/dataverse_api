@@ -49,7 +49,7 @@ module Dataverse
       self.class.api_call(url, **args)
     end
 
-    def self.api_call(url, method: :get, headers: {},  params: {}, body: nil, format: :api, block: nil, options: {})
+    def self.api_call(url, method: :get, headers: {},  params: {}, body: nil, format: :api, block: nil, timeout: 120, options: {})
 
       unless ENV.has_key?('API_URL') && ENV.has_key?('API_TOKEN')
         raise Error.new("Set environment variables 'API_URL' and 'API_TOKEN'")
@@ -83,6 +83,7 @@ module Dataverse
         url: url,
         headers: headers,
         payload: body,
+        timeout: timeout,
         # log: STDOUT,
         **options
       )
