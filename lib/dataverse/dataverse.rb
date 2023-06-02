@@ -74,32 +74,65 @@ module Dataverse
       api_call("dataverses/#{id}/#{url}", **args)
     end
 
-    def children
-      @children ||= begin
-        result = []
-        data = call("contents")
-        data.each do |x|
-          begin
-            case x['type']
-            when 'dataverse'
-              result << Dataverse.id(x['id'])
-            when 'dataset'
-              ds = Dataset.id(x['id'])
-              result << ds if ds.version
-            else
-              raise Error.new("Unsupported type: #{x['type']} (#{x['name']})")
-            end
-          rescue => e
-            puts "ERROR: Skipped creating #{x['type']} object '#{x['id']}' : '#{e.message}'."
+    def each_child(&block)
+      data = call("contents")
+      data.each do |x|
+        begin
+          case x['type']
+          when 'dataverse'
+            dv = Dataverse.id(x['id'])
+            data << (block_given? ? yield(child) : child)
+
+          when 'dataset'
+            ds = Dataset.id(x['id'])
+            result << ds if ds.version
+          else
+            raise Error.new("Unsupported type: #{x['type']} (#{x['name']})")
           end
+        rescue => e
+          puts "ERROR: Skipped creating #{x['type']} object '#{x['id']}' : '#{e.message}'."
         end
-        result
       end
+      result
+    end
+
+
+    def children(&block)
+      if @children && @children.is_a?(Array)
+        @children.each { |child| yield(child) } if block_given?
+      else
+        @children = begin
+          result = []
+          data = call("contents")
+          data.each do |x|
+            begin
+              case x['type']
+              when 'dataverse'
+                dv = Dataverse.id(x['id'])
+                yield dv if block_given?
+                result << dv
+              when 'dataset'
+                ds = Dataset.id(x['id'])
+                if ds.version
+                  yield ds if block_given?
+                  result << ds
+                end
+              else
+                raise Error.new("Unsupported type: #{x['type']} (#{x['name']})")
+              end
+            rescue => e
+              puts "ERROR: Skipped #{x['type']} object '#{x['id']}' : '#{e.message}'."
+            end
+          end
+          result
+        end
+      end
+      @children
     end
 
     def each_dataverse(&block)
       data = []
-      children.each do |child|
+      children do |child|
         if child.is_a?(Dataverse)
           data << (block_given? ? yield(child) : child)
           data += child.each_dataverse(&block)
@@ -110,7 +143,7 @@ module Dataverse
 
     def each_dataset(&block)
       data = []
-      children.each do |child|
+      children do |child|
         if child.is_a?(Dataverse)
           data += child.each_dataset(&block)
         elsif child.is_a?(Dataset)
